@@ -12,26 +12,32 @@ using namespace std;
 
 int main()
 {
-	DWORD dwResult = InitPasswordPing(L"<your api key here>", L"<your api secret here>");
-	BOOL bResult = FALSE;
+// first initialize the library with your API key and secret.  This should always be the first call
+// made after loading the library.
+DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET");
+BOOL bResult = FALSE;
 
-	dwResult = CheckPassword(L"123456", &bResult);
+// Call CheckPassword and check a password known to be compromised.
+dwResult = CheckPassword(L"123456", &bResult);
 
-	if (dwResult == 0) {
-		wcout << "Password: 123456, Result: " << (bResult ? "bad" : "good") << "\n";
-	}
-	else {
-		wcout << "Error checking password: " << dwResult << "\n";
-	}
+// If successful, bResult wil contain the compromise status (true for compromised and false for not)
+if (dwResult == ERROR_SUCCESS) {
+	wcout << "Password: 123456, Result: " << (bResult ? "bad" : "good") << "\n";
+}
+else {
+	wcout << "Error checking password: " << dwResult << "\n";
+}
 
-	dwResult = CheckPassword(L"thisisnotabadpassword", &bResult);
+// Now call CheckPassword with a password known to not be compromised. 
+dwResult = CheckPassword(L"thisisnotabadpassword", &bResult);
 
-	if (dwResult == 0) {
-		wcout << "Password: thisisnotabadpassword, Result: " << (bResult ? "bad" : "good") << "\n";
-	}
-	else {
-		wcout << "Error checking password: " << dwResult << "\n";
-	}
+// If successful, bResult wil contain the compromise status (true for compromised and false for not)
+if (dwResult == ERROR_SUCCESS) {
+	wcout << "Password: thisisnotabadpassword, Result: " << (bResult ? "bad" : "good") << "\n";
+}
+else {
+	wcout << "Error checking password: " << dwResult << "\n";
+}
 
 	system("pause");
 

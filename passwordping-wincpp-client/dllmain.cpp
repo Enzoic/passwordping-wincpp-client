@@ -37,7 +37,7 @@ InitPasswordPing(LPTSTR lpszAPIKey, LPTSTR lpszSecret) {
 }
 
 extern "C" __declspec(dllexport) DWORD __stdcall
-CheckPassword(LPTSTR lpszPassword, PBOOL bResult) {
+CheckPassword(LPTSTR lpszPassword, PBOOL pbResult) {
 
 	if (lpszAuthString == NULL) {
 		// not initialized
@@ -53,7 +53,7 @@ CheckPassword(LPTSTR lpszPassword, PBOOL bResult) {
 	memset(sha1, 0, sizeof(sha1));
 	memset(sha256, 0, sizeof(sha256));
 
-	*bResult = FALSE;
+	*pbResult = FALSE;
 
 	dwResult = Hashing::CalcMD5(lpszPassword, md5);
 
@@ -86,7 +86,7 @@ CheckPassword(LPTSTR lpszPassword, PBOOL bResult) {
 	}
 
 	if (statusCode == 200) {
-		*bResult = TRUE;
+		*pbResult = TRUE;
 	}
 
 	SecureZeroMemory(md5, sizeof(md5));
