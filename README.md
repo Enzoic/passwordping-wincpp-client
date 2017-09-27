@@ -21,7 +21,7 @@ Here's the API in a nutshell.  This is from the passwordping-wincpp-client-examp
 ```cpp
 // first initialize the library with your API key and secret.  This should always be the first call
 // made after loading the library.
-DWORD dwResult = InitPasswordPing(L"<your api key here>", L"<your api secret here>");
+DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET", 0 /* a timeout value in ms for API calls, or 0 for default timeout */);
 BOOL bResult = FALSE;
 
 // Call CheckPassword and check a password known to be compromised.
@@ -51,15 +51,15 @@ More information in reference format can be found below.
 
 ## InitPasswordPing
 
-Must be the first call made after loading the library, prior to calling CheckPassword. Takes null-terminated strings containing the API key and secret you were issued on PasswordPing signup.  Returns a standard Windows error code response.
+Must be the first call made after loading the library, prior to calling CheckPassword. The first two arguments are null-terminated strings containing the API key and secret you were issued on PasswordPing signup.  The last argument is a timeout value, expressed in milliseconds, to use when making calls to the PasswordPing API.  If 0 is specified for the timeout, the default timeout of 30 seconds is used.  InitPasswordPing returns a standard Windows error code response.
 
 ```cpp
-DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET");
+DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET", 0 /* a timeout value in ms for API calls, or 0 for default timeout */);
 ```
 
 ## CheckPassword
 
-Checks a password for compromised status against the PasswordPing Passwords API.  The first parameter is a null-terminated string containing the password to check.  The second parameter is a pointer to a boolean which will receive the compromised status of the password.  Returns a standard Windows error code response.
+Checks a password for compromised status against the PasswordPing Passwords API.  The first parameter is a null-terminated string containing the password to check.  The second parameter is a pointer to a boolean which will receive the compromised status of the password.  Returns a standard Windows error code response.  If InitPasswordPing has not been called, returns ERROR_NOT_READY.  If an invalid API key or Secret were provided, returns ERROR_NOT_AUTHENTICATED.  If the request times out, ERROR_WINHTTP_TIMEOUT is returned.
 
 ```cpp
 BOOL bResult;

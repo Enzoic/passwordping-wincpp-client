@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "wininet.lib")
 
-DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, int &statusCode) {
+DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, ULONG ulNetworkTimeout, int &statusCode) {
 	char szData[1024];
 	DWORD dwResult = 0;
 
@@ -13,6 +13,14 @@ DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, int &sta
 	HINTERNET hInternet = ::InternetOpen(TEXT("PasswordPingCPPClient"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
 	if (hInternet != NULL)
 	{
+		if (ulNetworkTimeout > 0) {
+			InternetSetOption(hInternet, INTERNET_OPTION_CONNECT_TIMEOUT, &ulNetworkTimeout, sizeof(ulNetworkTimeout));
+			InternetSetOption(hInternet, INTERNET_OPTION_CONTROL_RECEIVE_TIMEOUT, &ulNetworkTimeout, sizeof(ulNetworkTimeout));
+			InternetSetOption(hInternet, INTERNET_OPTION_CONTROL_SEND_TIMEOUT, &ulNetworkTimeout, sizeof(ulNetworkTimeout));
+			InternetSetOption(hInternet, INTERNET_OPTION_RECEIVE_TIMEOUT, &ulNetworkTimeout, sizeof(ulNetworkTimeout));
+			InternetSetOption(hInternet, INTERNET_OPTION_SEND_TIMEOUT, &ulNetworkTimeout, sizeof(ulNetworkTimeout));
+		}
+
 		// open HTTP session
 		HINTERNET hConnect = ::InternetConnect(hInternet, L"api.passwordping.com", INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, INTERNET_FLAG_SECURE, 1);
 
@@ -38,7 +46,7 @@ DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, int &sta
 			//	(_params.empty() ? L"" : (L"?" + _params));
 
 			// open request
-			HINTERNET hRequest = ::HttpOpenRequest(hConnect, L"GET", szRequest, NULL, NULL, 0, INTERNET_FLAG_KEEP_CONNECTION | INTERNET_FLAG_SECURE, 1);
+			HINTERNET hRequest = ::HttpOpenRequest(hConnect, L"GET", szRequest, NULL, NULL, 0, INTERNET_FLAG_KEEP_CONNECTION | INTERNET_FLAG_SECURE | INTERNET_FLAG_NO_CACHE_WRITE, 1);
 			if (hRequest != NULL)
 			{
 				// send request

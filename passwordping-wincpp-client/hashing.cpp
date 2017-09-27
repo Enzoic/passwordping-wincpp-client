@@ -32,7 +32,7 @@ DWORD Hashing::CalcHashTypeUsingWinCrypt(ALG_ID iHashAlgType, DWORD cbHashLen, L
 				{
 					if (CryptGetHashParam(hHash, HP_HASHVAL, rgbHash, &cbHashLen, 0))
 					{
-						for (int i = 0; i < cbHashLen; i++) {
+						for (DWORD i = 0; i < cbHashLen; i++) {
 							wsprintf(lpOutHash + i * sizeof(TCHAR), L"%02x", rgbHash[i]);
 						}
 					}
