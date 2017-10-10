@@ -21,7 +21,13 @@ Here's the API in a nutshell.  This is from the passwordping-wincpp-client-examp
 ```cpp
 // first initialize the library with your API key and secret.  This should always be the first call
 // made after loading the library.
-DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET", 0 /* a timeout value in ms for API calls, or 0 for default timeout */, NULL /* proxy server address */);
+DWORD dwResult = InitPasswordPing(
+    L"YOUR_API_KEY", 
+    L"YOUR_API_SECRET", 
+    0 /* a timeout value in ms for API calls, or 0 for default timeout */, 
+    NULL /* proxy server address */
+);
+
 BOOL bResult = FALSE;
 
 // Call CheckPassword and check a password known to be compromised.
@@ -54,7 +60,12 @@ More information in reference format can be found below.
 Must be the first call made after loading the library, prior to calling CheckPassword. The first two arguments are null-terminated strings containing the API key and secret you were issued on PasswordPing signup.  The third argument is a timeout value, expressed in milliseconds, to use when making calls to the PasswordPing API.  If 0 is specified for the timeout, the default timeout of 30 seconds is used.  The last argument is the address of an HTTP proxy server to use, if desired.  The server address should be in the format <hostname>:<port>, e.g. "127.0.0.1:8123".  InitPasswordPing returns a standard Windows error code response.
 
 ```cpp
-DWORD dwResult = InitPasswordPing(L"YOUR_API_KEY", L"YOUR_API_SECRET", 0 /* a timeout value in ms for API calls, or 0 for default timeout */, NULL /* proxy server address */);
+DWORD dwResult = InitPasswordPing(
+    L"YOUR_API_KEY", 
+    L"YOUR_API_SECRET", 
+    0 /* a timeout value in ms for API calls, or 0 for default timeout */, 
+    NULL /* proxy server address */
+);
 ```
 
 ## CheckPassword
