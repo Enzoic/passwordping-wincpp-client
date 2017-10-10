@@ -11,6 +11,9 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #define API_KEY L"YOUR_API_KEY"
 #define API_SECRET L"YOUR_API_SECRET"
 
+// TODO: add valid proxy server here to test proxy server, e.g. "127.0.0.1:8123"
+#define PROXY_SERVER NULL
+
 namespace passwordpingwincppclienttests
 {
 	TEST_CLASS(passwordpingwincppclienttests)
@@ -19,7 +22,7 @@ namespace passwordpingwincppclienttests
 
 		TEST_METHOD(TestInitPasswordPing) 
 		{
-			LONG dwResult = InitPasswordPing(API_KEY, API_SECRET, 0);
+			LONG dwResult = InitPasswordPing(API_KEY, API_SECRET, 0, PROXY_SERVER);
 
 			Assert::AreEqual(ERROR_SUCCESS, dwResult);
 		}
@@ -32,12 +35,12 @@ namespace passwordpingwincppclienttests
 
 			Assert::AreEqual(ERROR_NOT_READY, dwResult);
 
-			dwResult = InitPasswordPing(L"junk", L"wrong", 1000);
+			dwResult = InitPasswordPing(L"junk", L"wrong", 1000, PROXY_SERVER);
 			dwResult = CheckPassword(L"1234567", &bResult);
 
 			Assert::AreEqual(ERROR_NOT_AUTHENTICATED, dwResult);
 
-			dwResult = InitPasswordPing(API_KEY, API_SECRET, 0);
+			dwResult = InitPasswordPing(API_KEY, API_SECRET, 0, PROXY_SERVER);
 			
 			Assert::AreEqual(ERROR_SUCCESS, dwResult);
 

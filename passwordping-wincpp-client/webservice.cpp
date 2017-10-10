@@ -5,12 +5,22 @@
 
 #pragma comment(lib, "wininet.lib")
 
-DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, ULONG ulNetworkTimeout, int &statusCode) {
+DWORD MakeWebServiceCall(LPWSTR page, LPWSTR params, LPWSTR authHeader, ULONG ulNetworkTimeout, 
+	LPTSTR lpszProxyServer, int &statusCode) {
+
 	char szData[1024];
 	DWORD dwResult = 0;
 
 	// initialize WinInet
-	HINTERNET hInternet = ::InternetOpen(TEXT("PasswordPingCPPClient"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+	HINTERNET hInternet;
+
+	if (lpszProxyServer != NULL) {
+		hInternet = ::InternetOpen(TEXT("PasswordPingCPPClient"), INTERNET_OPEN_TYPE_PROXY, lpszProxyServer, NULL, 0);
+	}
+	else {
+		hInternet = ::InternetOpen(TEXT("PasswordPingCPPClient"), INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, 0);
+	}
+
 	if (hInternet != NULL)
 	{
 		if (ulNetworkTimeout > 0) {

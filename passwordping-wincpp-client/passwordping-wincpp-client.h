@@ -15,8 +15,9 @@
 /// <param name="lpszAPIKey">Null terminated LPTSTR containing your PasswordPing API key</param>  
 /// <param name="lpszSecret">Null terminated LPTSTR containing your PasswordPing API secret</param>  
 /// <param name="ulNetworkTimeoutInMs">Unsigned long containing a timeout in milliseconds for API calls.  If 0 is provided, the default timeout (30 seconds) will be used.</param>
+/// <param name="lpszProxyServer">HTTP proxy server host and port, e.g. "127.0.0.1:8123" or NULL if no proxy server should be used</param>
 /// <returns>0 on success.  If non-zero, the return code is a standard Windows error code.</returns>  
-PASSWORDPING_API DWORD __stdcall InitPasswordPing(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs);
+PASSWORDPING_API DWORD __stdcall InitPasswordPing(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs, LPTSTR lpszProxyServer);
 
 /// <summary>
 /// Checks a password against the PasswordPing API to determine if it is known to be compromised.
@@ -32,6 +33,6 @@ PASSWORDPING_API DWORD __stdcall CheckPassword(LPTSTR lpszPassword, PBOOL pbResu
 
 
 // function types for LoadLibrary/GetProcAddress usage
-typedef DWORD (__stdcall *f_InitPasswordPing)(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs);
+typedef DWORD (__stdcall *f_InitPasswordPing)(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs, LPTSTR lpszProxyServer);
 typedef DWORD (__stdcall *f_CheckPassword)(LPTSTR lpszPassword, PBOOL pbResult);
 

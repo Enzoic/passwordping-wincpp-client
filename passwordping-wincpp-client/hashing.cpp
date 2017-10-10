@@ -87,7 +87,7 @@ DWORD Hashing::Base64Encode(LPTSTR lpToEncode, LPTSTR& lpEncoded)
 
 	dwResult = ConvertWideToUTF8(lpToEncode, lpToEncodeUTF8);
 
-	if (dwResult == 0) {
+	if (dwResult == ERROR_SUCCESS) {
 		// get length
 		if (CryptBinaryToString(reinterpret_cast<const BYTE*>(lpToEncodeUTF8), strlen(lpToEncodeUTF8), CRYPT_STRING_BASE64 | CRYPT_STRING_NOCRLF, nullptr, &cbEncodedLen)) {
 			lpEncoded = static_cast<LPTSTR>(HeapAlloc(GetProcessHeap(), HEAP_NO_SERIALIZE, cbEncodedLen * sizeof(TCHAR)));

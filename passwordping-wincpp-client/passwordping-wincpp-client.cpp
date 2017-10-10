@@ -5,21 +5,47 @@
 #include "passwordping-wincpp-client.h"
 #include "hashing.h"
 #include "webservice.h"
+#include <strsafe.h>
+#include <string.h>
+#include <tchar.h>
+#include <stdlib.h>
 
 LPTSTR lpszAuthString = NULL;
 ULONG ulNetworkTimeout = 0;
+LPTSTR lpszProxy = NULL;
 
-DWORD __stdcall InitPasswordPing(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs) {
+DWORD __stdcall InitPasswordPing(LPTSTR lpszAPIKey, LPTSTR lpszSecret, ULONG ulNetworkTimeoutInMs, LPTSTR lpszProxyServer) {
 	TCHAR szAuthStringTemp[1024];
 	memset(szAuthStringTemp, 0, sizeof(szAuthStringTemp));
 
 	wsprintf(szAuthStringTemp, L"%s:%s", lpszAPIKey, lpszSecret);
 
-	Hashing::Base64Encode(szAuthStringTemp, lpszAuthString);
+	DWORD dwResult = Hashing::Base64Encode(szAuthStringTemp, lpszAuthString);
 
-	ulNetworkTimeout = ulNetworkTimeoutInMs;
+	if (dwResult == ERROR_SUCCESS) {
+		ulNetworkTimeout = ulNetworkTimeoutInMs;
 
-	return 0;
+		if (lpszProxy) {
+			// free the old
+			free(lpszProxy);
+			lpszProxy = NULL;
+		}
+
+		if (lpszProxyServer) {
+			size_t proxyServerLen = _tcslen(lpszProxyServer) + 1;
+
+			lpszProxy = (LPTSTR)malloc(proxyServerLen * sizeof(TCHAR));
+
+			if (lpszProxy == NULL) {
+				dwResult = GetLastError();
+			}
+			else {
+				dwResult = StringCchCopy(lpszProxy, proxyServerLen, lpszProxyServer);
+			}
+		}
+	}
+
+	return dwResult;
 }
 
 DWORD __stdcall CheckPassword(LPTSTR lpszPassword, PBOOL pbResult) {
@@ -57,7 +83,7 @@ DWORD __stdcall CheckPassword(LPTSTR lpszPassword, PBOOL pbResult) {
 
 				int statusCode = 0;
 				dwResult = MakeWebServiceCall(L"passwords", szParams,
-					lpszAuthString, ulNetworkTimeout,
+					lpszAuthString, ulNetworkTimeout, lpszProxy,
 					statusCode);
 
 				if (dwResult == ERROR_SUCCESS) {

@@ -19,7 +19,7 @@ int main()
 {
 	// first initialize the library with your API key and secret.  This should always be the first call
 	// made after loading the library.
-	DWORD dwResult = InitPasswordPing(API_KEY, API_SECRET, 0);
+	DWORD dwResult = InitPasswordPing(API_KEY, API_SECRET, 0, NULL);
 	BOOL bResult = FALSE;
 	
 	// Call CheckPassword and check a password known to be compromised.
